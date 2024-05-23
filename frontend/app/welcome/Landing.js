@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 
-export default function Landing() {
+const Landing = () => {
     /*
     useEffect(() => {
         console.log("Try me")
@@ -26,3 +26,5 @@ export default function Landing() {
         </div>
     )
 }
+
+export default Landing;
