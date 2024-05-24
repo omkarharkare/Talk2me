@@ -4,31 +4,31 @@ import { useState } from "react";
 import axios from "axios";
 
 const Login = () => { 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [loginusername, setloginUsername] = useState("");
+    const [loginpassword, setloginPassword] = useState("");
 
     const submit = () => {
         axios({
             method: "post", 
             data: {
-                username: username,
-                password: password
+                username: loginusername,
+                password: loginpassword,
             },
             withCredentials: true,
-            url: "http://localhost:5000/register",
+            url: "http://localhost:5000/login",
             
-        }).then((res) => console.log(res));
+        }).then((res) => console.log(res)).catch(err => console.log(err));
     }
 
     return (
         <div>
             <h1>Login</h1>
             <div>
-                {console.log(username, password)}
+                {console.log(loginusername, loginpassword)}
                 <label for="username">First Name</label>
-                <input type="text" id="username" name="username" placeholder="username" onChange={e => setUsername(e.target.value)}/>
+                <input type="text" id="username" name="username" placeholder="username" onChange={e => setloginUsername(e.target.value)}/>
                 <label for="password">Password</label>
-                <input type="text" id="password" name="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
+                <input type="text" id="password" name="password" placeholder="Password" onChange={e => setloginPassword(e.target.value)}/>
                 <button onClick={submit}>Login</button>
             </div>
         </div>

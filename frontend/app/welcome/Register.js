@@ -26,7 +26,6 @@ export default function Register() {
     const [password, setPassword] = useState("");
 
     const submit = () => {
-        const data = new FormData(event.currentTarget);
         axios({
             method: "POST", 
             data: {
@@ -37,15 +36,6 @@ export default function Register() {
             url: "http://localhost:5000/register"
         }).then((res) => console.log(res).catch((err) => console.log(err)));
     }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('username'),
-      password: data.get('password'),
-    });
-  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -65,6 +55,7 @@ export default function Register() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {console.log(username, password)}
           <Box component="form" onSubmit={submit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
