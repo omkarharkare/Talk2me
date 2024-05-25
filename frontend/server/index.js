@@ -73,7 +73,7 @@ app.post("/login", (req, res, next) => {
 })
 
 
-app.get("getUser", (req, res) => {
+app.get("/getUser", (req, res) => {
     res.send(req.user)
 })
 

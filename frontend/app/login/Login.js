@@ -3,21 +3,17 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {Grid, Box, Button, TextField} from "@mui/material";
+import { makeStyles } from '@mui/styles';
 
-const Login = () => { 
+const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundColor: "green"
+  },
+}))
+
+const Login = () => {
+    const classes = useStyles();
     const router = useRouter();
     const [loginusername, setloginUsername] = useState("");
     const [loginpassword, setloginPassword] = useState("");
@@ -35,68 +31,24 @@ const Login = () => {
         }).then((res) => {
             console.log(res);
             if (res.data === "User logged in") {
-                router.push('/')
+                router.push('/quiz')
             }
         })
         .catch(err => console.log(err))
     }
 
     return (
-        <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-          {console.log(loginusername, loginpassword)}
-          <Box component="form" onSubmit={submit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="User name"
-              name="username"
-              autoComplete="username"
-              autoFocus
-              onChange={e => setloginUsername(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={e => setloginPassword(e.target.value)}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-          </Box>
-        </Box>
-      </Container>
+        <div className={classes.root}>
+            <h1>Login</h1>
+            <div>
+                {console.log(loginusername, loginpassword)}
+                <label for="username">First Name</label>
+                <input type="text" id="username" name="username" placeholder="username" onChange={e => setloginUsername(e.target.value)}/>
+                <label for="password">Password</label>
+                <input type="text" id="password" name="password" placeholder="Password" onChange={e => setloginPassword(e.target.value)}/>
+                <button onClick={submit}>Login</button>
+            </div>
+        </div>
     );
 }
 

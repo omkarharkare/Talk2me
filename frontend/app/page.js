@@ -2,9 +2,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, TextField } from '@mui/material';
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 
+  const router = useRouter();
+  
+  /*
   const [username, setUsername] = useState('');
   
   useEffect(() => {
@@ -20,15 +24,17 @@ export default function Home() {
         setUsername(res.data.username)
     })
     .catch(err => console.log(err))
-}
-
+  }
+  */
+  
   return (
     <main>
       <div>
-        Home
-        <h3>Logged in with user : {username}</h3>
-        <Button>Login</Button>
-        <Button>Register</Button>
+        <h2>
+          Welcome To the headache study, Thank you for your contributions
+        </h2>
+        <Button onClick={() => router.push('/login')}>Login</Button>
+        <Button onClick={() => router.push('/registration')}>Register</Button>
       </div>
     </main>
   );

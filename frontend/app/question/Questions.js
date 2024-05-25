@@ -1,8 +1,9 @@
 'use client'
+import { Quiz } from "@mui/icons-material";
 import React, {useEffect, useState} from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 
-const Landing = () => {
+const Questions = () => {
     /*
     useEffect(() => {
         console.log("Try me")
@@ -27,4 +28,4 @@ const Landing = () => {
     )
 }
 
-export default Landing;
+export default Questions;
