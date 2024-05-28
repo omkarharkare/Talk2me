@@ -1,7 +1,6 @@
 'use client'
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function Instructions() {
@@ -32,7 +31,7 @@ export default function Instructions() {
             <h1>Welcome Instructions</h1>
             <p>{content.gibbers}</p>
             <h3>Logged in with user : {username}</h3>
-            <Button onClick={() => router.push('/question')}>Start Test</Button>
+            <button onClick={() => router.push('/question')}>Start Test</button>
         </div>
     )
 }

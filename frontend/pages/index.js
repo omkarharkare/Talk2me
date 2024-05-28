@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, TextField } from '@mui/material';
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -33,8 +32,8 @@ export default function Home() {
         <h2>
           Welcome To the headache study, Thank you for your contributions
         </h2>
-        <Button onClick={() => router.push('/login')}>Login</Button>
-        <Button onClick={() => router.push('/register')}>Register</Button>
+        <button onClick={() => router.push('/login')}>Login</button>
+        <button onClick={() => router.push('/register')}>Register</button>
       </div>
     </main>
   );
