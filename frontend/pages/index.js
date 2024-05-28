@@ -34,7 +34,7 @@ export default function Home() {
           Welcome To the headache study, Thank you for your contributions
         </h2>
         <Button onClick={() => router.push('/login')}>Login</Button>
-        <Button onClick={() => router.push('/registration')}>Register</Button>
+        <Button onClick={() => router.push('/register')}>Register</Button>
       </div>
     </main>
   );
