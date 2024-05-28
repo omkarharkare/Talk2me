@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default function Instructions() {
     const router = useRouter();
     const [username, setUsername] = useState('');
   
@@ -18,7 +18,11 @@ export default function Page() {
             withCredentials: true,
             url: "http://localhost:5000/getUser",
         }).then((res) => {
+            if (res.data === "") {
+                router.push('/login')
+            }
             setUsername(res.data.username)
+            
         })
         .catch(err => console.log(err))
     }

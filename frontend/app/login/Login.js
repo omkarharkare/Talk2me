@@ -4,16 +4,16 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import {Grid, Box, Button, TextField} from "@mui/material";
-import { makeStyles } from '@mui/styles';
+//import { makeStyles } from '@mui/styles';
 
+/*
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: "green"
   },
 }))
-
+*/
 const Login = () => {
-    const classes = useStyles();
     const router = useRouter();
     const [loginusername, setloginUsername] = useState("");
     const [loginpassword, setloginPassword] = useState("");
@@ -31,14 +31,14 @@ const Login = () => {
         }).then((res) => {
             console.log(res);
             if (res.data === "User logged in") {
-                router.push('/quiz')
+                router.push('/instructions')
             }
         })
         .catch(err => console.log(err))
     }
 
     return (
-        <div className={classes.root}>
+        <div>
             <h1>Login</h1>
             <div>
                 {console.log(loginusername, loginpassword)}

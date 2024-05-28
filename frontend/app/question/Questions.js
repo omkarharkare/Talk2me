@@ -1,31 +1,40 @@
 'use client'
-import { Quiz } from "@mui/icons-material";
-import React, {useEffect, useState} from "react";
-import { useReactMediaRecorder } from "react-media-recorder";
+import * as React from 'react';
+import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 
-const Questions = () => {
-    /*
-    useEffect(() => {
-        console.log("Try me")
-    }, [])
-    */
-   
-    // const [initial, setinitial] = useState(console.log("Welcome"));
-    const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({audio: true})
+export default function Questions() {
+  const recorderControls = useAudioRecorder(
+    {
+      noiseSuppression: true,
+      echoCancellation: true,
+    },
+    (err) => console.table(err) // onNotAllowedOrFound
+  );
+  const addAudioElement = (blob) => {
+    const url = URL.createObjectURL(blob);
+    const audio = document.createElement('audio');
+    audio.src = url;
+    audio.controls = true;
+    document.body.appendChild(audio);
+  };
 
-    /*
-    function handleClick () {
-        setinitial(console.log("fuck off"))
-    }
-    */
-    return (
-        <div>
-            <p>{status}</p>
-            <button onClick={startRecording}>Start Recording</button>
-            <button onClick={stopRecording}>Stop Recording</button>
-            <video src={mediaBlobUrl} controls autoPlay loop />
-        </div>
-    )
+  return (
+    <div>
+      <AudioRecorder
+        onRecordingComplete={(blob) => addAudioElement(blob)}
+        recorderControls={recorderControls}
+        downloadOnSavePress={true}
+        downloadFileExtension="mp3"
+        showVisualizer={true}
+      />
+      <br />
+      <button onClick={recorderControls.stopRecording}>Stop recording</button>
+      <br />
+    </div>
+  );
 }
 
-export default Questions;
+/*
+  In case you'd like to update colors of the icons just follow the instruction here:
+  https://github.com/samhirtarif/react-audio-recorder/issues/19#issuecomment-1420248073
+*/
