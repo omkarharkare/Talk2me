@@ -4,9 +4,11 @@ import { useReactMediaRecorder } from "react-media-recorder-2";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const Try = () => {
+const Questions = () => {
     const recording_time = 11*1000; // 2 minutes 
     const router = useRouter();
+    const [audiofile, setAudiofile] = useState(null);
+    
     useEffect(() => {
 
         getUser();
@@ -34,6 +36,25 @@ const Try = () => {
         .catch(err => console.log(err))
     }
 
+    const handleUpload = async () => {
+        if(audiofile) {
+            try {
+                const formData = new FormData();
+                formData.append("audio", audiofile);
+
+                const response = await axios.post("http://localhost:5000/upload", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                console.log("Audio file uploaded successfully:", response.data);
+            } catch (error) {
+                console.error("Error uploading audio file:", error);
+            }
+
+        }
+    }
+
     const {
         status,
         startRecording,
@@ -48,9 +69,14 @@ const Try = () => {
                 <button onClick={stopRecording}>Stop Recording</button>
             )}
             <h3> Username: {username}</h3>
-            {mediaBlobUrl && <audio src={mediaBlobUrl} controls />}
+            {mediaBlobUrl && 
+                <div>
+                    <audio src={mediaBlobUrl} controls />
+                    <button onClick={handleUpload}>upload</button>
+                </div>    
+            }
         </div>
     );
 };
 
-export default Try;
+export default Questions;
