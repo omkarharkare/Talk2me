@@ -37,22 +37,23 @@ const Questions = () => {
     }
 
     const handleUpload = async () => {
-        if(audiofile) {
-            try {
-                const formData = new FormData();
-                formData.append("audio", audiofile);
+        axios: ({
+            method: "post",
+            data: {
+                title: "description", 
+                audio: audiofile,
+            },
+            withCredentials: true,
+            url: "http://localhost:5000/upload"
+        }).then((res) => {
+            console.log(res);
+            console.log("uploaded")
+        })
+        .catch(err => console.log(err))
+    }
 
-                const response = await axios.post("http://localhost:5000/upload", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                });
-                console.log("Audio file uploaded successfully:", response.data);
-            } catch (error) {
-                console.error("Error uploading audio file:", error);
-            }
-
-        }
+    const logger = () => {
+        console.log(audiofile)
     }
 
     const {
@@ -72,7 +73,8 @@ const Questions = () => {
             {mediaBlobUrl && 
                 <div>
                     <audio src={mediaBlobUrl} controls />
-                    <button onClick={handleUpload}>upload</button>
+                    <button onClick={() => setAudiofile(mediaBlobUrl)}>Save Audio</button>
+                    <button onClick={logger}>upload</button>
                 </div>    
             }
         </div>

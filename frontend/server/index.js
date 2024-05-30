@@ -1,13 +1,18 @@
 const express = require('express'); 
 const bodyParser = require('body-parser'); 
 const cors = require('cors');
-const bcrpyt = require('bcrypt');
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 const expressSession = require('express-session');
 const cookieSession = require('cookie-parser');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
-const db = require("./db");
+const fs = require('node-fs');
+const multer = require('multer');
+const User = require('./login')
+const Audio = require('./audio');
 
+// Initializing the packages 
 const app = express();
 
 app.use(bodyParser.json());
@@ -18,76 +23,112 @@ app.use(expressSession({
     saveUninitialized: false
 })); 
 
+// Establish cross-origin relation
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
 }));
 
+// Initialize sessions 
 app.use(cookieParser('mine'));
 app.use(passport.initialize());
 app.use(passport.session()); 
 require("./passportConfig")(passport);
 
+// DB connections
+const dbstring = "mongodb://localhost:27017/Users";
+
+const conn = mongoose.createConnection(dbstring).
+asPromise();
+conn.readyState; // 1, means Mongoose is connected
+
+mongoose.connect( dbstring);
+
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
 
-app.post('/register', (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
+    const check = await User.exists({ username: req.body.username})
 
-    const query = "INSERT INTO accounts (`username`, `password`) VALUES (?,?)";
-    const query2 = "Select * from accounts where username = ?"; 
+        try {
+            if (check) {
+                res.send("User already exits")
+                console.log(req.body)
+            }
+            else {
+                console.log(req.body)
+                 // Hash the password
+                const hashedPassword = await bcrypt.hash(password, 10);
 
-    db.query(query2, [username], (err, result) => {
-        if(err) {throw err;}
-        if(result.length > 0) {
-            res.send({ message: "Username already exists"});
+                // Create a new user using the User model
+                const newUser = new User({
+                    username: username,
+                    password: hashedPassword
+                });
+
+                // Save the new user to the database
+                await newUser.save();
+                res.send({ message: 'User created' });
+            }
         }
-        if(result.length === 0) {
-            const hashedPassword = bcrpyt.hashSync(password, 10); // Enable for password encryption
-            db.query(query, [username, hashedPassword], (err, result) => {
-                if (err) {throw err;}
-                res.send({message: 'User created'});
-            });
+        catch (err) {
+            console.log(err);
+            res.status(500).send({ message: 'An error occurred during registration' });
         }
-    })
 })
 
 app.post("/login", (req, res, next) => {
-    passport.authenticate('local',(err, user, info) => {
-        if(err) {throw err;}
-        if(!user) { 
-            res.send("No user exists")
-        }
-        if(user) {
-            req.login(user, (err) => {
-                if(err) {throw err;}
-                res.send("User logged in")
-                console.log(user)
-            })
-        }
-    })(req, res, next);
-})
-
-app.post("/upload", (req, res) => {
-    if (!req.files || Object.keys(req.files).length === 0) {
-        return res.status(400).send("No files were uploaded.");
-    }
-
-    const audioFile = req.files.audio;
-
-    // Move the uploaded file to a designated location
-    audioFile.mv(`./uploads/${audioFile.name}`, (err) => {
+    passport.authenticate('local', (err, user, info) => {
         if (err) {
-            return res.status(500).send(err);
+            throw err;
         }
-
-        res.send("File uploaded successfully.");
-    });
+        if (!user) {
+            return res.send("No user exists");
+        }
+        req.login(user, (err) => {
+            if (err) {
+                throw err;
+            }
+            res.send("User logged in");
+            console.log(user);
+        });
+    })(req, res, next);
 });
+
+
+// Set up Multer for file upload
+const upload = multer({ dest: 'uploads/' });
+
+
+// Upload route
+app.post('/upload', upload.single('audio'), async (req, res) => {
+    try {
+      // Read the uploaded audio file
+      const audioData = fs.readFileSync(req.file.path);
+  
+      // Create a new audio document
+      const newAudio = new Audio({
+        title: req.body.title,
+        audio: {
+          data: audioData,
+          contentType: req.file.mimetype
+        }
+      });
+  
+      // Save the audio document to the database
+      await newAudio.save();
+  
+      // Send response
+      res.send('Audio file uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading audio file', error);
+      res.status(500).send('An error occurred while uploading the audio file');
+    }
+  });
 
 app.get("/getUser", (req, res) => {
     res.send(req.user)
@@ -97,5 +138,4 @@ app.get("/getUser", (req, res) => {
 app.listen(5000, () => {
     console.log('Server started on port 5000')
 }); 
-
 

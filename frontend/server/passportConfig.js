@@ -1,44 +1,55 @@
-const db = require("./db");
-const bcrypt = require("bcrypt"); 
-const localStrategy = require('passport-local').Strategy
+const localStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+
+const User = require('./login'); // Import the Mongoose user model
 
 module.exports = function(passport) {
     passport.use(
         new localStrategy((username, password, done) => {
-            const query = "SELECT * FROM login_register.accounts where username = ?";
-            db.query(query, [username], (err, result ) => {
-                if (err) {throw err;}
-                if(result.length === 0 ) {
-                    return done(null, false)
+            // Find the user by username in the database
+            User.findOne({ username: username }, (err, user) => {
+                if (err) {
+                    return done(err);
                 }
-            
-                bcrypt.compare(password, result[0].password, (err, response) => {
-                    if (err) {throw err;}
-                    if(response === true ) {
-                        return done(null, result[0])
-                    }
-                    else {
-                        return done(null, false);
-                    }
-                })
+                if (!user) {
+                    return done(null, false, { message: 'No user exists' });
+                }
                 
-            })
+                // Compare passwords
+                bcrypt.compare(password, user.password, (err, result) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (result) {
+                        return done(null, user);
+                    } else {
+                        return done(null, false, { message: 'Incorrect password' });
+                    }
+                });
+            });
         })
-    )
+    );
 
     passport.serializeUser((user, done) => {
         done(null, user.id);
-    })
-
+    });
+    
     passport.deserializeUser((id, done) => {
-        const query = "SELECT * FROM login_register.accounts where id = ?";
-        db.query(query, [id], (err, result) => {
-            if(err) {throw err;}
-            const userinfo = {
-                id: result[0].id,
-                username: result[0].username
+        // Find the user by id in the database
+        User.findById(id, (err, user) => {
+            if (err) {
+                return done(err);
             }
-            done(null, userinfo)
+            if (!user) {
+                return done(null, false, { message: 'User not found' });
+            }
+            // If user is found, return user info
+            const userinfo = {
+                id: user.id,
+                username: user.username
+            };
+            done(null, userinfo);
         });
     });
-}
+};
+
