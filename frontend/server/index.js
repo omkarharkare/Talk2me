@@ -8,9 +8,10 @@ const cookieSession = require('cookie-parser');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const fs = require('node-fs');
+const path = require('path');
+const fileUpload = require("express-fileupload");
 const multer = require('multer');
-const User = require('./login')
-const Audio = require('./audio');
+const {User, File} = require('./login');
 
 // Initializing the packages 
 const app = express();
@@ -22,6 +23,7 @@ app.use(expressSession({
     resave: 'false', 
     saveUninitialized: false
 })); 
+app.use(fileUpload());
 
 // Establish cross-origin relation
 app.use(cors({
@@ -99,36 +101,64 @@ app.post("/login", (req, res, next) => {
     })(req, res, next);
 });
 
-
-// Set up Multer for file upload
-const upload = multer({ dest: 'uploads/' });
-
-
-// Upload route
-app.post('/upload', upload.single('audio'), async (req, res) => {
-    try {
-      // Read the uploaded audio file
-      const audioData = fs.readFileSync(req.file.path);
-  
-      // Create a new audio document
-      const newAudio = new Audio({
-        title: req.body.title,
-        audio: {
-          data: audioData,
-          contentType: req.file.mimetype
-        }
-      });
-  
-      // Save the audio document to the database
-      await newAudio.save();
-  
-      // Send response
-      res.send('Audio file uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading audio file', error);
-      res.status(500).send('An error occurred while uploading the audio file');
+/*
+// Endpoint to handle file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/') // Directory where audio files will be uploaded
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }
   });
+  
+  // File filter for webm and mp3 files
+  const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'audio/webm' || file.mimetype === 'audio/mp3') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only webm and mp3 files are allowed'));
+    }
+  };
+  
+  const upload = multer({
+    storage: "./uploads/",
+    limits: {
+        fileSize: 10 * 1024 * 1024, // No larger than 10mb
+        fieldSize: 10 * 1024 * 1024, // No larger than 10mb
+    },
+  })
+
+  const audioSchema = new mongoose.Schema({
+    audio: Buffer
+  });
+  
+  const Audio = mongoose.model('Audio', audioSchema);
+  
+app.post('/upload', upload.single('audio'), (req, res) => {
+    const audio = new Audio({
+      audio: req.file
+    });
+  
+    audio.save((err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Error uploading audio' });
+      } else {
+        res.send({ message: 'Audio uploaded successfully' });
+      }
+    });
+  });
+  
+app.get("/upload", async (req, res) => {
+    try {
+        const items = await Audio.find();
+        res.status(200).json({ items });
+      } catch (error) {
+        console.log(error);
+      }
+})
+*/
 
 app.get("/getUser", (req, res) => {
     res.send(req.user)

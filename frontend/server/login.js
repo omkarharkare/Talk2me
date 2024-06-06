@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const login = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -15,18 +15,16 @@ const login = new mongoose.Schema({
 const audioSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: true, 
+    trim: true,
   },
-  audio: {
-    data: Buffer, // Store the audio file data as a Buffer
-    contentType: String // Specify the content type of the audio file
-  },
-  uploadedAt: {
-    type: Date,
-    default: Date.now
+  file: {
+    type: String, 
+    required: true,
   }
 });
 
-const User = mongoose.model('User', login);
+const User = mongoose.model('User', userSchema);
+const File = mongoose.model('File', audioSchema);
 
 module.exports = User
