@@ -4,15 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-//import { makeStyles } from '@mui/styles';
 
-/*
-const useStyles = makeStyles(theme => ({
-  root: {
-    backgroundColor: "green"
-  },
-}))
-*/
 const Login = () => {
     const router = useRouter();
     const [loginusername, setloginUsername] = useState("");

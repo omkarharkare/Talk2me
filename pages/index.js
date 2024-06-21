@@ -27,7 +27,6 @@ export default function Home() {
   */
   
   return (
-    <main>
       <div>
         <h2>
           Welcome To the headache study, Thank you for your contributions
@@ -35,7 +34,6 @@ export default function Home() {
         <button onClick={() => router.push('/login')}>Login</button>
         <button onClick={() => router.push('/register')}>Register</button>
       </div>
-    </main>
   );
 }
 
