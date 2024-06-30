@@ -3,6 +3,7 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Basepage from "./components/Basepage";
 
 
 const Login = () => {
@@ -30,7 +31,7 @@ const Login = () => {
     }
 
     return (
-        <div>
+        <Basepage>
             <h1>Login</h1>
             <div>
                 {console.log(loginusername, loginpassword)}
@@ -40,7 +41,7 @@ const Login = () => {
                 <input type="text" id="password" name="password" placeholder="Password" onChange={e => setloginPassword(e.target.value)}/>
                 <button onClick={submit}>Login</button>
             </div>
-        </div>
+        </Basepage>
     );
 }
 

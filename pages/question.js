@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder-2";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Basepage from "./components/Basepage";
 
 const Questions = () => {
     const recording_time = 11*1000; // 2 minutes 
@@ -65,7 +66,7 @@ const Questions = () => {
     } = useReactMediaRecorder({ audio: true });
 
     return (
-        <div>
+        <Basepage>
             <p>Status: {status}</p>
             {status === "recording" && (
                 <button onClick={stopRecording}>Stop Recording</button>
@@ -78,7 +79,7 @@ const Questions = () => {
                     <button onClick={handleUpload}>upload</button>
                 </div>    
             }
-        </div>
+        </Basepage>
     );
 };
 

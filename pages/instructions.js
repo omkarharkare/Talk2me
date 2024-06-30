@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Basepage from "./components/Basepage";
 
 export default function Instructions() {
     const router = useRouter();
@@ -27,12 +28,12 @@ export default function Instructions() {
     }
 
     return (
-        <div>
+        <Basepage>
             <h1>Welcome Instructions</h1>
             <p>{content.gibbers}</p>
             <h3>Logged in with user : {username}</h3>
             <button onClick={() => router.push('/question')}>Start Test</button>
-        </div>
+        </Basepage>
     )
 }
 

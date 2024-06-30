@@ -3,6 +3,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Basepage from './components/Basepage';
 
 
 export default function Register() {
@@ -32,7 +33,7 @@ export default function Register() {
     }
 
   return (
-    <div>
+    <Basepage>
       <h1>Register</h1>
             <div>
                 {console.log(username, password)}
@@ -42,6 +43,6 @@ export default function Register() {
                 <input type="text" id="password" name="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
                 <button onClick={submit}>Login</button>
       </div>
-    </div>
+    </Basepage>
   );
 }

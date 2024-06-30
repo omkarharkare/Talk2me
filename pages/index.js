@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Basepage from "./components/Basepage";
 
 export default function Home() {
 
@@ -27,13 +28,13 @@ export default function Home() {
   */
   
   return (
-      <div>
+      <Basepage>
         <h2>
           Welcome To the headache study, Thank you for your contributions
         </h2>
         <button onClick={() => router.push('/login')}>Login</button>
         <button onClick={() => router.push('/register')}>Register</button>
-      </div>
+      </Basepage>
   );
 }
 

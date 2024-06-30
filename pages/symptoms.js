@@ -1,6 +1,7 @@
 // src/components/SymptomForm.js
 import React, { useState } from 'react';
 import { Box, FormControl, FormLabel, FormControlLabel, RadioGroup, Radio, Checkbox, TextField, Typography, Button } from '@mui/material';
+import Basepage from './components/Basepage';
 
 const SymptomForm = () => {
   const [formData, setFormData] = useState({
@@ -34,6 +35,7 @@ const SymptomForm = () => {
   };
 
   return (
+    <Basepage>
     <Box sx={{ p: 3 }}>
       <Typography variant="h5" gutterBottom>
         Have you experienced any of the following today:
@@ -110,6 +112,7 @@ const SymptomForm = () => {
         Submit
       </Button>
     </Box>
+    </Basepage>
   );
 };
 
